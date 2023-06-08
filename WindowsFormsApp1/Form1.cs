@@ -14,6 +14,7 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        private Color lineColor;
         public Form1()
         {
             InitializeComponent();
@@ -21,7 +22,10 @@ namespace WindowsFormsApp1
             KeyDown += (object sender, KeyEventArgs e) => { if (e.KeyValue == (char)Keys.Delete) button5_Click(button5, null); };
             KeyDown += (object sender, KeyEventArgs e) => { if (e.KeyValue == (char)Keys.A) button1_Click(button1, null); };
             KeyDown += (object sender, KeyEventArgs e) => { if (e.KeyValue == (char)Keys.B) button2_Click(button2, null); };
+            KeyDown += (object sender, KeyEventArgs e) => { if (e.KeyValue == (char)Keys.C) button3_Click(button3, null); };
             KeyDown += (object sender, KeyEventArgs e) => { if (e.KeyValue == (char)Keys.D) button4_Click(button4, null); };
+            timer2.Interval = 200;
+            lineColor = Color.Black;
         }
         //1 Task
         private void button1_Click(object sender, EventArgs e)
@@ -152,6 +156,70 @@ namespace WindowsFormsApp1
             };
             g.DrawLines(Pens.Black, text_3);
         }
+        //3 Task
+
+        private int x1;
+        private int x2;
+        private int y1;
+        private int y2;
+        private float x3;
+        private float y3;
+        private double k;
+        private double b;
+        private int step = 1;
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Graphics g = CreateGraphics();
+            Random rnd = new Random();
+            x1 = rnd.Next(10, 300);
+            x2 = rnd.Next(x1, 400);
+            y1 = rnd.Next(10, 150);
+            y2 = rnd.Next(10, 200);
+            double k = rnd.NextDouble();
+            x3 = (float)(x1 + (x2 - x1) * k);
+            y3 = (float)(y1 + (y2 - y1) * k);
+            //k = (y2 - y1) / (x2 - x1);
+            //b = y2 - k * x2;
+            //x3 = rnd.Next(x1,x2);
+            //y3 = Convert.ToInt32(k * x3 + b);
+            timer2.Start();
+        
+        }
+        private int newX1;
+        private int newX2;
+        private int newY1;
+        private int newY2;
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            Graphics g = CreateGraphics();
+            g.Clear(Color.White);
+            lineColor = GetRandomColor();
+            
+            double angle = step * Math.PI / 100;
+            newX1 = (int)((x1-x3) * Math.Cos(angle) - (y1 - y3) * Math.Sin(angle) + x3);
+            newX2 = (int)((x2 - x3) * Math.Cos(angle) - (y2 - y3) * Math.Sin(angle) + x3);
+            newY1 = (int)((x1 - x3) * Math.Sin(angle) + (y1 - y3) * Math.Cos(angle) + y3);
+            newY2 = (int)((x2 - x3) * Math.Sin(angle) + (y2 - y3) * Math.Cos(angle) + y3);
+            //x1 = Convert.ToInt32(x3 - Math.Sqrt(length1) + (float)(Math.Cos(angle)));
+            //y1 = Convert.ToInt32(y3 - Math.Sqrt(length1) + (float)(Math.Sin(angle)));
+            //y1 = Convert.ToInt32(x3 + Math.Sqrt(length2) + (float)(Math.Cos(angle)));
+            //y2 = Convert.ToInt32(y3 + Math.Sqrt(length2) + (float)(Math.Sin(angle)));
+            g.DrawLine(Pens.Black, x3, y3, x1, y1);
+            using (Pen pen = new Pen(lineColor, 5))
+            {
+                g.DrawLine(pen, newX1, newY1, newX2, newY2);
+            }
+            
+            step++;
+        }
+
+        private Color GetRandomColor()
+        {
+            Random random = new Random();
+            Color color = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+            return color;
+        }
+
         //4 Task
         private void button4_Click(object sender, EventArgs e)
         {
@@ -208,7 +276,8 @@ namespace WindowsFormsApp1
             pictureBox1.Visible = false;
             pictureBox1.Invalidate();
             timer1.Stop();
-            //timer2.Stop();
+            timer2.Stop();
         }
+
     }
 }
