@@ -164,8 +164,8 @@ namespace WindowsFormsApp1
         private int y2;
         private float x3;
         private float y3;
-        private double k;
-        private double b;
+        //private double k;
+        //private double b;
         private int step = 1;
         private void button3_Click(object sender, EventArgs e)
         {
@@ -266,8 +266,48 @@ namespace WindowsFormsApp1
             //g.FillEllipse(Brushes.Black, quadrat2);
             Invalidate();
             angle += 7;
+            if (x_1 == 350)
+            {
+                timer1.Stop();
+                timer3.Start();
+            }
+        }
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            Graphics g = pictureBox1.CreateGraphics();
+            g.Clear(Color.White);
+            x_0_erstesRad -= 5;
+            x_0_zweitesRad -= 5;
+            x_1 -= 5;
+            x_2 -= 5;
+            x_3 -= 5;
+            int height = 50;
+            int width = 200;
+            Point[] point;
+            point = new Point[]
+            {
+                new Point(x_2, 220),
+                new Point(x_3,170)
+            };
+            g.DrawLine(Pens.Black, point[0], point[1]);
+            Rectangle rech = new Rectangle(x_1, 220, width, height);
+            g.FillRectangle(Brushes.DarkGray, rech);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TranslateTransform(x_0_erstesRad + 20, 250 + 23);
+            g.RotateTransform(angle);
+            g.FillEllipse(Brushes.Black, -23, -20, 46, 40);
 
-
+            g.ResetTransform();
+            g.TranslateTransform(x_0_zweitesRad + 20, 250 + 23);
+            g.RotateTransform(angle);
+            g.FillEllipse(Brushes.Black, -23, -20, 46, 40);
+            Invalidate();
+            angle -= 7;
+            if (x_1 == 20)
+            {
+                timer3.Stop();
+                timer1.Start();
+            }
         }
         //Delete
         private void button5_Click(object sender, EventArgs e)
@@ -277,7 +317,9 @@ namespace WindowsFormsApp1
             pictureBox1.Invalidate();
             timer1.Stop();
             timer2.Stop();
+            timer3.Stop();
         }
 
+        
     }
 }
